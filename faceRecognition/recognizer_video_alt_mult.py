@@ -100,7 +100,7 @@ def detectFaces(file_path):
 		#print("----------- Found {} at ({}, {})".format(name, left, top))
 		# Show all the face with the names attached
 	FRP.show_known_face_name(file_path, predict, acc)
-			
+	os.remove(file_path)		
 	gc.collect()
 	return 1
 def mp_worker(files):
@@ -122,7 +122,6 @@ if __name__ == '__main__':
 
 print("\rstep two complete") 
 
-foldername = "preproc_frames"
 
 
 
@@ -131,8 +130,8 @@ cc = cv2.VideoWriter_fourcc(*'VP80')
 resulting_video = cv2.VideoWriter(filename, cc, fps, (int(convert_video.get(cv2.CAP_PROP_FRAME_WIDTH)), int(convert_video.get(cv2.CAP_PROP_FRAME_HEIGHT))))
 
 i = 0
-
-for img in sorted(os.listdir(foldername)):
+foldername = "known_faces"
+for img in sorted(os.listdir("known_faces")):
     
     i += 1
     stdout.write("\r" + "writing frame {}".format(i) + " of {}".format(length))
@@ -144,7 +143,9 @@ for img in sorted(os.listdir(foldername)):
     open_cv_image = np.array(the_image)
     image = open_cv_image[:, :, ::-1].copy() 
     resulting_video.write(image)
+    os.remove(file_path)
     
 dlib.hit_enter_to_continue
+os.rmdir(foldername)
 print("\r--- %s seconds ---" % (time.time() - start_time))
 print("step three complete!")
